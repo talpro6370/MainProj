@@ -1,0 +1,52 @@
+﻿<Window x:Class="part2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:part2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="600" >
+    <Grid>
+        <Button x:Name="AddBtn" Content="Add to DB" HorizontalAlignment="Left" Margin="401,81,0,0" VerticalAlignment="Top" Width="75" Height="30" Command="{Binding AddToDB}"/>
+
+        <StackPanel>
+            <Label Content="Airline Companies" HorizontalAlignment="Left" Margin="82,80,0,0" VerticalAlignment="Top"/>
+            <Label Content="Customers" HorizontalAlignment="Left" Margin="82,20,0,0" VerticalAlignment="Top"/>
+            <Label Content="Flights Per Company" HorizontalAlignment="Left" Margin="82,20,0,0" VerticalAlignment="Top"/>
+            <Label Content="Tickets Per Customer" HorizontalAlignment="Left" Margin="82,20,0,0" VerticalAlignment="Top"/>
+            <Label Content="Countries" HorizontalAlignment="Left" Margin="82,20,0,0" VerticalAlignment="Top"/>
+            <Border BorderBrush="Black" BorderThickness="1" Height="20" Width="80" Margin="-30,-390,0,0">
+                <TextBox x:Name="airlineCmpTxtBox" Text="{Binding AirlineNo,Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Height="20" Width="80" Margin="-30,-300,0,0">
+                <TextBox x:Name="customerTxtBox" Text="{Binding CustomerNo,Mode=TwoWay}"  TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Height="20" Width="80" Margin="-30,-210,0,0">
+                <TextBox Text="{Binding FlightsPerCmpnyNo,Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Height="20" Width="80" Margin="-30,-120,0,0">
+                <TextBox x:Name="ticketsPerCustomer" Text="{Binding TicketsPerCustNo, Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Height="20" Width="80" Margin="-30,-30,0,0">
+                <TextBox x:Name="CountryTxtBox" Text="{Binding CountriesNo, Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+            <TextBlock x:Name="completedPercentsValueTxtBlock" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" Text="TextBlock" Margin="82,20,0,0"/>
+            <ProgressBar Height="20" Width="400" Margin="-30,20,0,0" Value="{Binding dbInsertClass, Mode=TwoWay}" Maximum="100" Minimum="0"/>
+            <Border BorderBrush="Black" BorderThickness="1" Height="150" Width="350" Margin="0,40,32,0">
+                <StackPanel>
+                    <Label Content="Label" Margin="0,10,0,0"/>
+                    <Label Content="Label" Margin="0,10,0,0"/>
+                    <Label Content="Label" Margin="0,10,0,0"/>
+                    <Label Content="Label" Margin="0,10,0,0"/>
+
+                </StackPanel>
+                
+
+            </Border>
+
+
+        </StackPanel>
+        <Button x:Name="ReplaceBtn" Content="Replace DB" HorizontalAlignment="Left" Margin="400,130,0,0" VerticalAlignment="Top" Width="75" Height="30" Command="{Binding MyReplaceDelegateCmd }"/>
+
+    </Grid>
+</Window>
