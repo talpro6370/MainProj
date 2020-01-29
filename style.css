@@ -1,0 +1,15 @@
+html{
+height: 100%;
+background-color: rgba(81, 229, 248, 0.493);
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+body{
+    height: 100%;
+    background-color: rgb(49, 199, 219);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+     
+}
