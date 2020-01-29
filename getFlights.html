@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <script src="../../Scripts/flight.js"></script>
+    <title>Landing Page</title>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <form class="form-inline">
+            <a class="navbar-brand">RdtFlights</a>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </nav>
+    <table border="1" id="flightsTable" style="margin-left: 10px" class="table table-striped table-bordered">
+        <tr>
+            <th>Id</th>
+            <th>Airline Company Name</th>
+            <th>Airline Company Id</th>
+            <th>Origin Country Code</th>
+            <th>Destination Country Code</th>
+            <th>Departure Time</th>
+            <th>Landing Time</th>
+            <th>Remaining Tickets</th>
+            <th>Flight Name</th>
+            <th>Status</th>
+        </tr>
+
+    </table>
+    <script>
+
+        const flights = []
+
+        $(document).ready(() => {
+            $tableFlights = $("#flightsTable")
+            $.ajax({
+                url: "/api/AnonymousFacade/GetAllFlights"
+            })
+                .then((flightsWebapi) => {
+
+                    console.log(flightsWebapi)
+
+                    $.each(flightsWebapi, (i, oneFlight) => {
+
+                        const aFlight = new Flight(oneFlight.Id, oneFlight.AIRLINECOMPANY_NAME, oneFlight.AIRLINECOMPANY_ID,
+                            oneFlight.ORIGIN_COUNTRY_CODE, oneFlight.DESTINATION_COUNTRY_CODE, oneFlight.DEPARTURE_TIME, oneFlight.LANDING_TIME, oneFlight.REMAINING_TICKETS, oneFlight.FLIGHT_NAME)
+
+                        flights.push(aFlight)
+
+                        $tableFlights.append("<tr>" +
+                            "<td>" + aFlight.id + "</td>" +
+                            "<td>" + aFlight.AIRLINECOMPANY_NAME + "</td>" +
+                            "<td>" + aFlight.AIRLINECOMPANY_ID + "</td>" +
+                            "<td>" + aFlight.ORIGIN_COUNTRY_CODE + "</td>" +
+                            "<td>" + aFlight.DESTINATION_COUNTRY_CODE + "</td>" +
+                            "<td>" + aFlight.DEPARTURE_TIME + "</td>" +
+                            "<td>" + aFlight.LANDING_TIME + "</td>" +
+                            "<td>" + aFlight.REMAINING_TICKETS + "</td>" +
+                            "<td>" + aFlight.FLIGHT_NAME + "</td>" +
+                            "<td>" + aFlight.status + "</td ></tr > ")
+                    })
+                })
+                .catch((err) => { console.log(err) })
+        })
+    </script>
+</body>
+</html>
