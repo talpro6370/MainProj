@@ -17,20 +17,24 @@ namespace part2
         CheckDataBase cData = new CheckDataBase();
         public WorkWithDB dbInsertClass { get; set; }
         public DelegateCommand AddToDB { get; set; }
+        public DelegateCommand ReplaceDB { get; set; }
         public WorkWithAPI apiWorker = new WorkWithAPI();
         public string AirlineNo { get; set; }
         public string CustomerNo { get; set; }
         public string FlightsPerCmpnyNo { get; set; }
         public string TicketsPerCustNo { get; set; }
         public string CountriesNo { get; set; }
-        public bool isTextHasChanged { get; set; } 
-        
+        public bool isTextHasChanged { get; set; }
+        public int ProggressBarVal { get; set; }
+
+        public int sumOfObjectsToCreate = 0;
+        public int SumInPercentage { get; set; }
 
         public MainWindowViewModel()
         {
             dbInsertClass = new WorkWithDB();
             AddToDB = new DelegateCommand(ExecuteAddDelegateCmd, CanExecuteAddBtnMethod);
-            
+            ReplaceDB = new DelegateCommand(ExecuteReplaceDelegateCmd, CanExecuteReplaceBtnMethod);
             Task.Run(() =>
            {
                while (true)
@@ -39,6 +43,15 @@ namespace part2
                    Thread.Sleep(100);
                }
            });
+
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    ReplaceDB.RaiseCanExecuteChanged();
+                    Thread.Sleep(100);
+                }
+            });
         }   
         private async void ExecuteAddDelegateCmd()
         {
@@ -46,19 +59,18 @@ namespace part2
         }
         private bool CanExecuteAddBtnMethod()
         {
-            if(cData.DataBaseStatus()==true|| dbInsertClass.InsertingDataBase(AirlineNo, CustomerNo, FlightsPerCmpnyNo, TicketsPerCustNo, CountriesNo).Status==TaskStatus.RanToCompletion)
+            if (cData.DataBaseStatus() == true)
                 return true;
             return false;
         }
         private void ExecuteReplaceDelegateCmd()
         {
             dbInsertClass.RemoveDB();
-            ExecuteAddDelegateCmd();
-
+            ExecuteAddDelegateCmd();      
         }
         private bool CanExecuteReplaceBtnMethod()
         {
-            if (dbInsertClass.customers!=null)
+            if (cData.DataBaseStatus()==false)
                 return true;
             return false;
         }

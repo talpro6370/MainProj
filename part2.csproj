@@ -80,6 +80,7 @@
     <Compile Include="AirlineCompaniesAPI.cs" />
     <Compile Include="CountriesAPI.cs" />
     <Compile Include="CustomersAPI.cs" />
+    <Compile Include="progressBarStatus.cs" />
     <Compile Include="WorkWithAPI.cs" />
     <Compile Include="WorkWithDB.cs" />
     <Page Include="MainWindow.xaml">

@@ -29,7 +29,6 @@ namespace part2
         public List<Country> CountriesApiWebWork()
         {
             HttpClient client = new HttpClient();
-
             client.BaseAddress = new Uri(countriesUrl);
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

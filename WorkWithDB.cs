@@ -27,6 +27,32 @@ namespace part2
         public WorkWithAPI restWorking;
         public event PropertyChangedEventHandler PropertyChanged;
         private BackgroundWorker _bgWorker;
+        public int proggressBarVal { get; set; }
+        public int proggressBarMaxVal { get; set; }
+        public int ProggressBarMaxVal
+        {
+            get
+            {
+                return proggressBarMaxVal;
+            }
+            set
+            {
+                this.proggressBarMaxVal = value;
+                OnPropertyChanged("ProggressBarMaxVal");
+            }
+        }
+        public int ProggressBarVal
+        {
+            get
+            {
+                return proggressBarVal ;
+            }
+            set
+            {
+                this.proggressBarVal = value;
+                OnPropertyChanged("ProggressBarVal");
+            }
+        }
         private int _progressStatus;
         public int ProgressStatus
         {
@@ -40,6 +66,11 @@ namespace part2
                 OnPropertyChanged("ProgressStatus");
             }
         }
+        public WorkWithDB()
+        {
+            _bgWorker = new BackgroundWorker();
+
+        }
         private void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -47,15 +78,17 @@ namespace part2
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        
-        public WorkWithDB()
-        {
-
-            _bgWorker = new BackgroundWorker();
-        }
         public async Task InsertingDataBase(string AirlineNo, string CustomerNo, string FlightsPerCmpnyNo, string TicketsPerCustNo, string CountriesNo)
         {
-            
+            _bgWorker.DoWork += (s, e) =>
+             {
+                 for (int i = 0; i < 101; i++)
+                 {
+                     Thread.Sleep(100);
+                     ProgressStatus = i;
+                 }
+             };
+            _bgWorker.RunWorkerAsync();
             int numberOfAirLines = Int32.Parse(AirlineNo);
             int numberOfCustomers = Int32.Parse(CustomerNo);
             int numberOfFlightsPerCmp = Int32.Parse(FlightsPerCmpnyNo);
@@ -72,23 +105,26 @@ namespace part2
                     int flightNoParsed = Convert.ToInt32(FlightsPerCmpnyNo);
                     int airlineNoParsed = Convert.ToInt32(AirlineNo);
                     int ticketNoParsed = Convert.ToInt32(TicketsPerCustNo);
+                    ProggressBarMaxVal = countryNoParsed + customerNoParsed + flightNoParsed + airlineNoParsed + ticketNoParsed;
                     for (int i = 0; i <countryNoParsed; i++)
                     {
                         afc.CreateNewCountry(new LoginToken<Administrator>(), countriesFromRest[i]);
+                        ProggressBarVal += i;
                     }
-
+                    
                     List<AirlineCompany> airlines = restWorking.AirlineCompnyApiWork();
                     for (int i = 0; i < airlineNoParsed; i++)
                     {
                         afc.CreateNewAirline(new LoginToken<Administrator>(), airlines[i]);
+                        ProggressBarVal += i;
                     }
 
                     List<Customer> customersREST = restWorking.CustomerApiWork();
                     for (int i = 0; i < customerNoParsed; i++)
                     {
                         afc.CreateNewCustomer(new LoginToken<Administrator>(), customersREST[i]);
+                        ProggressBarVal += i;
                     }
-
                     flightsPerCompany = new List<Flight>();
                     long airlineId = 0;
                     long countryCode = 0;
@@ -97,16 +133,21 @@ namespace part2
                     DateTime firstDate = new DateTime();
                     DateTime secondDate = new DateTime();
                     numberOfFlightsToCreate = RandomFlightToBeCreated();
-                    for (int i = 0; i < flightNoParsed; i++)
+                    for (int j = 0; j < airlineNoParsed; j++)
                     {
-                        airlineId = alf.GetRandomAirlineId();
-                        airlineName = alf.GetAirlineNameByID((int)airlineId);
-                        countryCode = alf.GetRandomCountryId();
-                        secondCountryCode = alf.GetRandomCountryId();
-                        firstDate = RandomDate();
-                        secondDate = RandomDate();
-                        flightsPerCompany.Add(new Flight(airlineId, countryCode, secondCountryCode, firstDate, secondDate, RandomTickets(), airlineName, RandomString()));
+                        for (int i = 0; i < flightNoParsed; i++)
+                        {
+                            airlineId = alf.GetRandomAirlineId();
+                            airlineName = alf.GetAirlineNameByID((int)airlineId);
+                            countryCode = alf.GetRandomCountryId();
+                            secondCountryCode = alf.GetRandomCountryId();
+                            firstDate = RandomDate();
+                            secondDate = RandomDate();
+                            flightsPerCompany.Add(new Flight(airlineId, countryCode, secondCountryCode, firstDate, secondDate, RandomTickets(), airlineName, RandomString()));
+                            ProggressBarVal += i;
+                        }
                     }
+                    
                     foreach (var flight in flightsPerCompany)
                     {
                         alf.CreateFlight(airlineToken, flight);
@@ -128,18 +169,12 @@ namespace part2
                             ticket.CUSTOMER_ID = customerIds[i];
                             ticket.FLIGHT_ID = flightID;
                             afc.AddTicket(ticket);
+                            ProggressBarVal += j;
                         }
                     }
-                    _bgWorker.DoWork += (s, e) =>
-                    {
-                        for (int i = 0; i < 101; i++)
-                        {
-                            Thread.Sleep(10);
-                            ProgressStatus = i;
-                        }
-                    };
+                    
                 });
-
+                
             }
             catch (Exception )
             {
@@ -181,6 +216,10 @@ namespace part2
             }
             return new String(stringChars);
         }
-
+        public TaskStatus DbStatus()
+        {
+            Task.WaitAll();
+            return Task.CompletedTask.Status;
+        }
     }
 }

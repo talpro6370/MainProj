@@ -20,15 +20,15 @@ namespace part2
     public partial class MainWindow : Window
     {
         public MainWindowViewModel vm;
+        public progressBarStatus pgbs = new progressBarStatus();
         public WorkWithDB wwdb;
-        string textBoxInput = null;
         public MainWindow()
         {
             
             vm = new MainWindowViewModel();
             InitializeComponent();
-            textBoxInput = airlineCmpTxtBox.Text;
             this.DataContext = vm;
+            //pgBar.DataContext = pgbs;
         }
 
         private void FlightsPerCmpnyTxtBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -39,6 +39,11 @@ namespace part2
         private void AirlineCmpTxtBox_IsMouseDirectlyOverChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
            
+        }
+
+        private void AirlineCmpTxtBox_Error(object sender, ValidationErrorEventArgs e)
+        {
+
         }
     }
 }
